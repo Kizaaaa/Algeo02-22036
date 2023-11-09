@@ -1,0 +1,40 @@
+<!doctype html>
+<html> 
+    <head><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <title>Never gonna lens you up</title>
+    </head>
+    <body>
+        <h1>Never Gonna Lens You Up</h1> 
+        <h2>Aplikasi pencarian gambar</h2>
+        <p>Unggah gambar dengan menggunakan tombol di bawah ini</p>
+        <p>
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <ul>
+                {% for message in messages %}
+                  <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+              {% endif %}
+            {% endwith %}
+        </p>
+        
+        <form method="POST" enctype="multipart/form-data"> 
+            <input type="file" name="file"><br> <!-- tombol upload -->
+            <input type="submit"> <!-- tombol submit-->
+        </form>
+        <h2>Gambar yang diinput:</h2>
+        {% if filename %}
+            <div>
+                <img src="{{ url_for('display_image', filename=filename) }}", width="300px">
+            </div>
+        {% endif %}
+        <h2>Hasil pencarian:</h2>
+        {% for score in scores %}
+            <figure style="float: left; margin-right: 20px; margin-bottom: 20px;">
+                <img src="{{ score[1] }}" height="200px">
+                <figcaption>{{ score[0] }}</figcaption>
+            </figure>
+        {% endfor %}
+    </body>
+</html>
