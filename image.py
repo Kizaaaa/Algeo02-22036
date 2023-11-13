@@ -1,7 +1,9 @@
 from PIL import Image
+from scipy.ndimage import zoom
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Pembuatan matriks RGB
 def rgb_to_hsv(rgb_tuple):
     r, g, b = rgb_tuple
     r = r / 255.0
@@ -27,59 +29,13 @@ def rgb_to_hsv(rgb_tuple):
     h = (h + 360) % 360
     return int(h), int(s * 100), int(v * 100)
 
-def hsv_to_bgr(h, s, v):
-    c = v * s
-    x = c * (1 - abs((h / 60) % 2 - 1))
-    m = v - c
-    if (0 <= h < 60):
-        r = c
-        g = x
-        b = 0
-    elif (60 <= h < 120):
-        r = x
-        g = c
-        b = 0
-    elif (120 <= h < 180):
-        r = 0
-        g = c
-        b = x
-    elif (180 <= h < 240):
-        r = 0
-        g = x
-        b = c
-    elif (240 <= h < 300):
-        r = x
-        g = 0
-        b = c
-    else: # (300 <= h < 360)
-        r = c
-        g = 0
-        b = x
-    r = round((r + m) * 255)
-    g = round((g + m) * 255)
-    b = round((b + m) * 255)
-    return b, g, r
-
 def image_to_hsv_matrix(image_path):
     image = Image.open(image_path)
     rgb_matrix = np.array(image)
     hsv_matrix = np.array([[rgb_to_hsv(pixel) for pixel in row] for row in rgb_matrix])
     return hsv_matrix
 
-def hsv_average(hsv_matrix):
-    rows, cols, _ = hsv_matrix.shape
-    part_rows = rows // 4
-    part_cols = cols // 4
-    hsv_average = []
-    for i in range(4):
-        for j in range(4):
-            part = hsv_matrix[i * part_rows : (i + 1) * part_rows, j * part_cols : (j + 1) * part_cols]
-            average_h = round(np.mean(part[:, :, 0]), 2)
-            average_s = round(np.mean(part[:, :, 1]), 2)
-            average_v = round(np.mean(part[:, :, 2]), 2)
-            hsv_average.append((average_h, average_s, average_v))
-    return hsv_average
-
+# Cosine Similarity
 def cosine_similarity(vector_a, vector_b):
     dot_product = sum(a * b for a, b in zip(vector_a, vector_b))
     norm_a = sum(a**2 for a in vector_a) ** 0.5
@@ -101,10 +57,36 @@ def average_cosine_similarity(hsv_average1, hsv_average2):
     average_cosine_similarity = np.mean(cosine_similarity_values)
     return average_cosine_similarity
 
+# CBIR dengan parameter warna
+def hsv_average(hsv_matrix):
+    rows, cols, _ = hsv_matrix.shape
+    part_rows = rows // 4
+    part_cols = cols // 4
+    hsv_average = []
+    for i in range(4):
+        for j in range(4):
+            part = hsv_matrix[i * part_rows : (i + 1) * part_rows, j * part_cols : (j + 1) * part_cols]
+            average_h = round(np.mean(part[:, :, 0]), 2)
+            average_s = round(np.mean(part[:, :, 1]), 2)
+            average_v = round(np.mean(part[:, :, 2]), 2)
+            hsv_average.append((average_h, average_s, average_v))
+    return hsv_average
 
-# hsv_matrix1 = image_to_hsv_matrix('C:/Users/Hp/Documents/ALGEO 2/Algeo02-22036/static/uploads/test.jpg')
+# CBIR dengan parameter tesktur
+def rgb_to_grayscale(r, g, b):
+    y = 0.29 * r + 0.587 * g + 0.114 * b
+    return y
+
+def image_to_grayscale(image_path):
+    image = Image.open(image_path)
+    rgb_matrix = np.array(image)
+    grayscale_matrix = np.apply_along_axis(lambda pixel: rgb_to_grayscale(*pixel), axis = -1, arr = rgb_matrix)
+    return grayscale_matrix
+
+# # Testing CBIR dengan parameter warna
+# hsv_matrix1 = image_to_hsv_matrix('C:/Users/Hp/Documents/ALGEO 2/Algeo02-22036/static/imgdataset/0.jpg')
 # hsv_average1 = hsv_average(hsv_matrix1)
-# hsv_matrix2 = image_to_hsv_matrix('C:/Users/Hp/Documents/ALGEO 2/Algeo02-22036/static/uploads/test.jpg')
+# hsv_matrix2 = image_to_hsv_matrix('C:/Users/Hp/Documents/ALGEO 2/Algeo02-22036/static/imgdataset/1.jpg')
 # hsv_average2 = hsv_average(hsv_matrix2)
 # average_cosine_similarity = average_cosine_similarity(hsv_average1, hsv_average2)
 # print(average_cosine_similarity)
