@@ -6,7 +6,8 @@
     <body>
         <h1>Never Gonna Lens You Up</h1> 
         <h2>Aplikasi pencarian gambar</h2>
-        <p>Unggah gambar dengan menggunakan tombol di bawah ini</p>
+        <p>Unggah gambar dengan menggunakan tombol di bawah ini. File yang valid hanyalah file yang berformat .png, .jpg, dan .jpeg.</p>
+        <p>Pastikan folder yang Anda unggah hanya memiliki file yang valid</p>
         <p>
             {% with messages = get_flashed_messages() %}
               {% if messages %}
@@ -20,7 +21,9 @@
         </p>
         
         <form method="POST" enctype="multipart/form-data"> 
+            <h3>Unggah Gambar:</h3>
             <input type="file" name="file"><br> <!-- tombol upload Gambar -->
+            <h3>Unggah folder dataset:</h3>
             <input type="file" name="database" id="databaseinput" webkitdirectory = "true" multiple/><br />
             <input type="submit"> <!-- tombol submit-->
         </form>
