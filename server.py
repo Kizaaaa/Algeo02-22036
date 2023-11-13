@@ -6,7 +6,7 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
  
 UPLOAD_FOLDER = 'static/uploads/'
- 
+
 app.secret_key = "secret key"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
  
@@ -26,13 +26,16 @@ def upload_image():
         flash('No file part')
         return redirect(request.url)
     file = request.files['file']
+    database = request.files.getlist('database')
     if file.filename == '':
         flash('Tidak ada gambar yang dipilih')
         return redirect(request.url)
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        #print('upload_image filename: ' + filename)
+        for databasefiles in database:
+            datFileName = secure_filename(databasefiles.filename)
+            databasefiles.save(os.path.join('static/imgdataset/',datFileName))
         flash('Gambar berhasil diunggah!')
         return render_template('home.html', filename=filename)
     else:
@@ -42,6 +45,6 @@ def upload_image():
 @app.route('/display/<filename>')
 def display_image(filename):
     return redirect(url_for('static', filename='uploads/' + filename), code=301)
- 
+
 if __name__ == "__main__":
     app.run(debug=True)
