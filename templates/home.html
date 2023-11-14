@@ -34,10 +34,10 @@
             </div>
         {% endif %}
         <h2>Hasil pencarian:</h2>
-        {% for score in scores %}
+        {% for simData in imgPrioQueue %}
             <figure style="float: left; margin-right: 20px; margin-bottom: 20px;">
-                <img src="{{ score[1] }}" height="200px">
-                <figcaption>{{ score[0] }}</figcaption>
+                <img src="{{ simData[1] }}" height="200px">
+                <figcaption>{{ simData[0] }}%</figcaption>
             </figure>
         {% endfor %}
     </body>

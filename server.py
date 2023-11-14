@@ -2,7 +2,7 @@ from flask import Flask, flash, request, redirect, url_for, render_template
 import urllib.request
 import os
 from werkzeug.utils import secure_filename
- 
+import image as CBIR
 app = Flask(__name__)
 
 UPLOAD_FOLDER = 'static/uploads/'
@@ -44,13 +44,25 @@ def upload_image():
                 isDatabaseValid = False
                 break
         if(isDatabaseValid):
+            databaseDir = "static/imgdataset/"
             for databasefiles in database:
                 datFileName = secure_filename(databasefiles.filename)
-                databasefiles.save(os.path.join('static/imgdataset/',datFileName))
+                databasefiles.save(os.path.join(databaseDir,datFileName))
             flash("Folder berhasil diunggah!")
+            hsv_avgUpload = CBIR.image_to_hsv_matrix(UPLOAD_FOLDER+filename)
+            imgPrioQueue = []
+            for fileIterate in os.listdir(databaseDir):
+                hsv_avgDat = CBIR.image_to_hsv_matrix(databaseDir + fileIterate)
+                cosSim = CBIR.color_average_cosine_similarity(hsv_avgUpload,hsv_avgDat) * 100
+                
+                if(cosSim >60):
+                    imgPrioQueue.append((cosSim,databaseDir+fileIterate))
+            imgPrioQueue.sort(reverse=True)
+
+            
         else:
             flash('Folder yang Anda unggah mengandung file yang tidak valid. Silakan upload folder yang hanya mengandung file yang valid')
-        return render_template('home.html', filename=filename)
+        return render_template('home.html', filename=filename, imgPrioQueue=imgPrioQueue)
     else:
         flash('Ekstensi file yang diperbolehkan hanyalah .jpg, .png, dan .jpeg')
         return redirect(request.url)

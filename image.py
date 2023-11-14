@@ -1,6 +1,6 @@
 from PIL import Image
 import numpy as np
-
+import os
 # Cosine Similarity
 def cosine_similarity(vector_a, vector_b):
     dot_product = sum(a * b for a, b in zip(vector_a, vector_b))
@@ -59,9 +59,8 @@ def hsv_average(hsv_matrix):
             hsv_average.append((average_h, average_s, average_v))
     return hsv_average
 
-def color_average_cosine_similarity(image_path1, image_path2):
-    hsv_average1 = image_to_hsv_matrix(image_path1)
-    hsv_average2 = image_to_hsv_matrix(image_path2)
+def color_average_cosine_similarity(hsv_average1, hsv_average2):
+
     cosine_similarity_values = []
     for avg1, avg2 in zip(hsv_average1, hsv_average2):
         vector_avg1 = np.array(avg1).flatten()
@@ -80,7 +79,7 @@ def image_to_normalized_glcm(image_path):
     image = Image.open(image_path)
     rgb_matrix = np.array(image)
     grayscale_matrix = np.apply_along_axis(lambda pixel: int(round(rgb_to_grayscale(*pixel))), axis=-1, arr=rgb_matrix)
-    glcm_matrix = np.zeros((256, 256), dtype=int)
+    glcm_matrix = np.zeros((256,256), dtype=int)
     rows, cols = grayscale_matrix.shape
     for i in range(rows):
         for j in range(cols):
@@ -97,8 +96,8 @@ def image_to_normalized_glcm(image_path):
                 glcm_matrix[grayscale_matrix[i, j], grayscale_matrix[i + 1, j + 1]] += 1
                 glcm_matrix[grayscale_matrix[i + 1, j + 1], grayscale_matrix[i, j]] += 1
     symmetric_matrix = glcm_matrix + glcm_matrix.T
-    sum = np.sum(symmetric_matrix)
-    symmetric_matrix_normalized = symmetric_matrix / sum
+    sumA = np.sum(symmetric_matrix)
+    symmetric_matrix_normalized = symmetric_matrix / sumA
     return symmetric_matrix_normalized
 
 def contrast_homogeneity_entropy(symmetric_matrix_normalized):
@@ -107,17 +106,11 @@ def contrast_homogeneity_entropy(symmetric_matrix_normalized):
     entropy = -np.sum(symmetric_matrix_normalized * np.log2(symmetric_matrix_normalized + 1e-10))
     return contrast, homogeneity, entropy
 
-def texture_cosine_similarity(image_path1, image_path2):
-    symmetrix_matrix_normalized1 = image_to_normalized_glcm(image_path1)
-    symmetrix_matrix_normalized2 = image_to_normalized_glcm(image_path2)
+def texture_cosine_similarity(symmetrix_matrix_normalized1, symmetrix_matrix_normalized2):
+
     contrast1, homogeneity1, entropy1 = contrast_homogeneity_entropy(symmetrix_matrix_normalized1)
     contrast2, homogeneity2, entropy2 = contrast_homogeneity_entropy(symmetrix_matrix_normalized2)
-    vector1 = np.array([contrast1, homogeneity1, entropy1])
-    vector2 = np.array([contrast2, homogeneity2, entropy2])
+    vector1 = [contrast1, homogeneity1, entropy1]
+    vector2 = [contrast2, homogeneity2, entropy2]
     cosine_similarity_value = cosine_similarity(vector1, vector2)
     return cosine_similarity_value
-
-# image_path1 = 'C:/Users/Hp/Documents/ALGEO 2/Algeo02-22036/static/imgdataset/0.jpg'
-# image_path2 = 'C:/Users/Hp/Documents/ALGEO 2/Algeo02-22036/static/imgdataset/4735.jpg'
-# cosine_similarity = texture_cosine_similarity(image_path1, image_path2)
-# print(cosine_similarity)
