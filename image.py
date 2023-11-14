@@ -1,6 +1,7 @@
 from PIL import Image
 import numpy as np
 import os
+
 # Cosine Similarity
 def cosine_similarity(vector_a, vector_b):
     dot_product = sum(a * b for a, b in zip(vector_a, vector_b))
@@ -41,7 +42,8 @@ def rgb_to_hsv(rgb_tuple):
 
 def image_to_hsv_matrix(image_path):
     image = Image.open(image_path)
-    rgb_matrix = np.array(image)
+    resized_image = image.resize((256, 256))
+    rgb_matrix = np.array(resized_image)
     hsv_matrix = np.array([[rgb_to_hsv(pixel) for pixel in row] for row in rgb_matrix])
     return hsv_matrix
 
@@ -60,7 +62,6 @@ def hsv_average(hsv_matrix):
     return hsv_average
 
 def color_average_cosine_similarity(hsv_average1, hsv_average2):
-
     cosine_similarity_values = []
     for avg1, avg2 in zip(hsv_average1, hsv_average2):
         vector_avg1 = np.array(avg1).flatten()
@@ -77,28 +78,38 @@ def rgb_to_grayscale(r, g, b):
 
 def image_to_normalized_glcm(image_path):
     image = Image.open(image_path)
-    rgb_matrix = np.array(image)
+    resized_image = image.resize((256, 256))
+    rgb_matrix = np.array(resized_image)
     grayscale_matrix = np.apply_along_axis(lambda pixel: int(round(rgb_to_grayscale(*pixel))), axis=-1, arr=rgb_matrix)
     glcm_matrix = np.zeros((256,256), dtype=int)
-    rows, cols = grayscale_matrix.shape
-    for i in range(rows):
-        for j in range(cols):
-            if j + 1 < cols:
-                glcm_matrix[grayscale_matrix[i, j], grayscale_matrix[i, j + 1]] += 1
-                glcm_matrix[grayscale_matrix[i, j + 1], grayscale_matrix[i, j]] += 1
-            if i + 1 < rows:
-                glcm_matrix[grayscale_matrix[i, j], grayscale_matrix[i + 1, j]] += 1
-                glcm_matrix[grayscale_matrix[i + 1, j], grayscale_matrix[i, j]] += 1
-            if i - 1 >= 0 and j + 1 < cols:
-                glcm_matrix[grayscale_matrix[i, j], grayscale_matrix[i - 1, j + 1]] += 1
-                glcm_matrix[grayscale_matrix[i - 1, j + 1], grayscale_matrix[i, j]] += 1
-            if i + 1 < rows and j + 1 < cols:
-                glcm_matrix[grayscale_matrix[i, j], grayscale_matrix[i + 1, j + 1]] += 1
-                glcm_matrix[grayscale_matrix[i + 1, j + 1], grayscale_matrix[i, j]] += 1
+    right_neighbors = np.roll(grayscale_matrix, shift=-1, axis=1)
+    down_neighbors = np.roll(grayscale_matrix, shift=-1, axis=0)
+    glcm_matrix[grayscale_matrix, right_neighbors] += 1
+    glcm_matrix[right_neighbors, grayscale_matrix] += 1
+    glcm_matrix[grayscale_matrix, down_neighbors] += 1
+    glcm_matrix[down_neighbors, grayscale_matrix] += 1
     symmetric_matrix = glcm_matrix + glcm_matrix.T
-    sumA = np.sum(symmetric_matrix)
-    symmetric_matrix_normalized = symmetric_matrix / sumA
+    symmetric_matrix_normalized = symmetric_matrix / np.sum(symmetric_matrix)
     return symmetric_matrix_normalized
+    # rows, cols = grayscale_matrix.shape
+    # for i in range(rows):
+    #     for j in range(cols):
+    #         if j + 1 < cols:
+    #             glcm_matrix[grayscale_matrix[i, j], grayscale_matrix[i, j + 1]] += 1
+    #             glcm_matrix[grayscale_matrix[i, j + 1], grayscale_matrix[i, j]] += 1
+    #         if i + 1 < rows:
+    #             glcm_matrix[grayscale_matrix[i, j], grayscale_matrix[i + 1, j]] += 1
+    #             glcm_matrix[grayscale_matrix[i + 1, j], grayscale_matrix[i, j]] += 1
+    #         if i - 1 >= 0 and j + 1 < cols:
+    #             glcm_matrix[grayscale_matrix[i, j], grayscale_matrix[i - 1, j + 1]] += 1
+    #             glcm_matrix[grayscale_matrix[i - 1, j + 1], grayscale_matrix[i, j]] += 1
+    #         if i + 1 < rows and j + 1 < cols:
+    #             glcm_matrix[grayscale_matrix[i, j], grayscale_matrix[i + 1, j + 1]] += 1
+    #             glcm_matrix[grayscale_matrix[i + 1, j + 1], grayscale_matrix[i, j]] += 1
+    # symmetric_matrix = glcm_matrix + glcm_matrix.T
+    # sumA = np.sum(symmetric_matrix)
+    # symmetric_matrix_normalized = symmetric_matrix / sumA
+    # return symmetric_matrix_normalized
 
 def contrast_homogeneity_entropy(symmetric_matrix_normalized):
     contrast = np.sum(symmetric_matrix_normalized * np.square(np.subtract.outer(range(256), range(256))))
@@ -106,11 +117,15 @@ def contrast_homogeneity_entropy(symmetric_matrix_normalized):
     entropy = -np.sum(symmetric_matrix_normalized * np.log2(symmetric_matrix_normalized + 1e-10))
     return contrast, homogeneity, entropy
 
-def texture_cosine_similarity(symmetrix_matrix_normalized1, symmetrix_matrix_normalized2):
-
-    contrast1, homogeneity1, entropy1 = contrast_homogeneity_entropy(symmetrix_matrix_normalized1)
-    contrast2, homogeneity2, entropy2 = contrast_homogeneity_entropy(symmetrix_matrix_normalized2)
+def texture_cosine_similarity(symmetric_matrix_normalized1, symmetric_matrix_normalized2):
+    contrast1, homogeneity1, entropy1 = contrast_homogeneity_entropy(symmetric_matrix_normalized1)
+    contrast2, homogeneity2, entropy2 = contrast_homogeneity_entropy(symmetric_matrix_normalized2)
     vector1 = [contrast1, homogeneity1, entropy1]
     vector2 = [contrast2, homogeneity2, entropy2]
     cosine_similarity_value = cosine_similarity(vector1, vector2)
     return cosine_similarity_value
+
+symmetric_matrix_normalized1 = image_to_normalized_glcm('C:/Users/Hp/Documents/ALGEO 2/Algeo02-22036/test/0.jpg')
+symmetric_matrix_normalized2 = image_to_normalized_glcm('C:/Users/Hp/Documents/ALGEO 2/Algeo02-22036/test/1.jpg')
+cosine_similarity_value = texture_cosine_similarity(symmetric_matrix_normalized1, symmetric_matrix_normalized2)
+print(cosine_similarity_value)
