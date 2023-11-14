@@ -16,7 +16,9 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
      
- 
+def clear_dir(directory):
+    for dumpFiles in os.listdir(directory):
+        os.remove(os.path.join(directory,dumpFiles))
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -25,10 +27,8 @@ def home():
 def upload_image():
     #reset static database dan uploads
     databaseDir = "static/imgdataset/"
-    for dumpFiles in os.listdir(databaseDir):
-        os.remove(os.path.join(databaseDir,dumpFiles))
-    for dumpFiles in os.listdir(UPLOAD_FOLDER):
-        os.remove(os.path.join(UPLOAD_FOLDER,dumpFiles))
+    clear_dir(databaseDir)
+    clear_dir(UPLOAD_FOLDER)
 
     if 'file' not in request.files:
         flash('No file part')
@@ -57,14 +57,26 @@ def upload_image():
                 datFileName = secure_filename(databasefiles.filename)
                 databasefiles.save(os.path.join(databaseDir,datFileName))
             flash("Folder berhasil diunggah!")
-            hsv_avgUpload = CBIR.image_to_hsv_matrix(UPLOAD_FOLDER+filename)
             imgPrioQueue = []
-            for fileIterate in os.listdir(databaseDir):
-                hsv_avgDat = CBIR.image_to_hsv_matrix(databaseDir + fileIterate)
-                cosSim = CBIR.color_average_cosine_similarity(hsv_avgUpload,hsv_avgDat) * 100
+            print(request.form.get('featuretoggle'))
+            if(request.form.get('featuretoggle')):
+                GLCM_Upload = CBIR.image_to_normalized_glcm(UPLOAD_FOLDER+filename)
+                for fileIterate in os.listdir(databaseDir):
+                    GLCM_avgDat = CBIR.image_to_normalized_glcm(databaseDir + fileIterate)
+                    cosSim = CBIR.texture_cosine_similarity(GLCM_Upload,GLCM_avgDat) * 100
                 
-                if(cosSim >60):
-                    imgPrioQueue.append((cosSim,databaseDir+fileIterate))
+                    if(cosSim >60):
+                        imgPrioQueue.append((cosSim,databaseDir+fileIterate))
+            else:
+                hsv_avgUpload = CBIR.image_to_hsv_matrix(UPLOAD_FOLDER+filename)
+                
+                for fileIterate in os.listdir(databaseDir):
+                    hsv_avgDat = CBIR.image_to_hsv_matrix(databaseDir + fileIterate)
+                    cosSim = CBIR.color_average_cosine_similarity(hsv_avgUpload,hsv_avgDat) * 100
+                
+                    if(cosSim >60):
+                        imgPrioQueue.append((cosSim,databaseDir+fileIterate))
+            
             imgPrioQueue.sort(reverse=True)
 
             
