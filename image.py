@@ -125,7 +125,7 @@ def texture_cosine_similarity(symmetric_matrix_normalized1, symmetric_matrix_nor
     cosine_similarity_value = cosine_similarity(vector1, vector2)
     return cosine_similarity_value
 
-symmetric_matrix_normalized1 = image_to_normalized_glcm('C:/Users/Hp/Documents/ALGEO 2/Algeo02-22036/test/0.jpg')
-symmetric_matrix_normalized2 = image_to_normalized_glcm('C:/Users/Hp/Documents/ALGEO 2/Algeo02-22036/test/1.jpg')
-cosine_similarity_value = texture_cosine_similarity(symmetric_matrix_normalized1, symmetric_matrix_normalized2)
-print(cosine_similarity_value)
+#symmetric_matrix_normalized1 = image_to_normalized_glcm('C:/Users/Hp/Documents/ALGEO 2/Algeo02-22036/test/0.jpg')
+#symmetric_matrix_normalized2 = image_to_normalized_glcm('C:/Users/Hp/Documents/ALGEO 2/Algeo02-22036/test/1.jpg')
+#cosine_similarity_value = texture_cosine_similarity(symmetric_matrix_normalized1, symmetric_matrix_normalized2)
+#print(cosine_similarity_value)

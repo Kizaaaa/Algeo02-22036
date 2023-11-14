@@ -3,6 +3,7 @@ import urllib.request
 import os
 from werkzeug.utils import secure_filename
 import image as CBIR
+import shutil
 app = Flask(__name__)
 
 UPLOAD_FOLDER = 'static/uploads/'
@@ -22,6 +23,13 @@ def home():
  
 @app.route('/', methods=['POST'])
 def upload_image():
+    #reset static database dan uploads
+    databaseDir = "static/imgdataset/"
+    for dumpFiles in os.listdir(databaseDir):
+        os.remove(os.path.join(databaseDir,dumpFiles))
+    for dumpFiles in os.listdir(UPLOAD_FOLDER):
+        os.remove(os.path.join(UPLOAD_FOLDER,dumpFiles))
+
     if 'file' not in request.files:
         flash('No file part')
         return redirect(request.url)
@@ -44,7 +52,7 @@ def upload_image():
                 isDatabaseValid = False
                 break
         if(isDatabaseValid):
-            databaseDir = "static/imgdataset/"
+            
             for databasefiles in database:
                 datFileName = secure_filename(databasefiles.filename)
                 databasefiles.save(os.path.join(databaseDir,datFileName))
