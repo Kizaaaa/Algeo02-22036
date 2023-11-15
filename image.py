@@ -125,13 +125,19 @@ def get_cbir_results(image_path, cbir_type):
         lines = file.readlines()
     if cbir_type == "color":
         result_color = lines[0].strip().split('\t')
-        return result_color
+        result_color_out = [eval(i) for a,i in enumerate(result_color)]
+
+        return result_color_out
     else:
         result_texture = lines[1].strip().split('\t')
 
         return float(result_texture[0]), float(result_texture[1]), float(result_texture[2])
 
 #image_path = 'test/69.jpg'
+#test = hsv_average(image_to_hsv_matrix(image_path))
+#print(test)
+#res_color = get_cbir_results(image_path,'color')
+#print(res_color)
 #save_cbir_results(image_path)
 #result_texture = get_cbir_results(image_path, 'color')
 #print("Texture Result:", result_texture)

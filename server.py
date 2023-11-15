@@ -28,7 +28,7 @@ def home():
 def upload_dataset():
     database = request.files.getlist("database")    
     databaseLoc = os.listdir(databaseDir)
-    if(len(databaseLoc) == 0): #kalau belum pernah diinput
+    if(len(databaseLoc) != 0): #kalau belum pernah diinput
         if database and any(f for f in database):
             clear_dir(databaseDir)
             clear_dir(cacheDir)
@@ -80,17 +80,15 @@ def upload_image():
                 print(cosSim)
                 if(cosSim >60):
                     imgPrioQueue.append((cosSim,databaseDir+fileIterate))
-            #else:
-             #   hsv_avgUpload = CBIR.image_to_hsv_matrix(UPLOAD_FOLDER+filename)
-              #  
-               # for fileIterate in os.listdir(databaseDir):
-                #    hsv_avgDat = CBIR.get_cbir_results(os.path.join(databaseDir,fileIterate),'texture')
-                 #   cosSim = CBIR.color_average_cosine_similarity(hsv_avgUpload,hsv_avgDat) * 100
-                
-                  #  if(cosSim >60):
-                   #     imgPrioQueue.append((cosSim,databaseDir+fileIterate))
+        else:
+            hsv_avgUpload = CBIR.hsv_average(CBIR.image_to_hsv_matrix(UPLOAD_FOLDER+filename))
+            for fileIterate in os.listdir(databaseDir):
+                hsv_avgDat = CBIR.get_cbir_results(os.path.join(databaseDir,fileIterate),'color')
+                cosSim = CBIR.color_average_cosine_similarity(hsv_avgUpload,hsv_avgDat) * 100
+                if(cosSim >60):
+                    imgPrioQueue.append((cosSim,databaseDir+fileIterate))
             
-            #imgPrioQueue.sort(reverse=True)
+        imgPrioQueue.sort(reverse=True)
         return render_template('home.html', filename=filename, imgPrioQueue=imgPrioQueue)
     else:
         flash('Ekstensi file yang diperbolehkan hanyalah .jpg, .png, dan .jpeg')
