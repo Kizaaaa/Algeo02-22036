@@ -63,6 +63,7 @@
             </div>
         {% endif %}
         <h2>Hasil pencarian:</h2>
+        <p>Menampilkan {{prioQueueSize}} gambar dalam waktu {{runTime}} detik</p>
         {% for simData in imgPrioQueue %}
             <figure style="float: left; margin-right: 20px; margin-bottom: 20px;">
                 <img src="{{ simData[1] }}" height="200px">

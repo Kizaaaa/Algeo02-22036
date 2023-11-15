@@ -4,6 +4,7 @@ import os
 from werkzeug.utils import secure_filename
 import image as CBIR
 import shutil
+import time
 app = Flask(__name__)
 
 UPLOAD_FOLDER = 'static/uploads/'
@@ -28,30 +29,30 @@ def home():
 def upload_dataset():
     database = request.files.getlist("database")    
     databaseLoc = os.listdir(databaseDir)
-    if(len(databaseLoc) != 0): #kalau belum pernah diinput
-        if database and any(f for f in database):
-            clear_dir(databaseDir)
-            clear_dir(cacheDir)
-            isDatabaseValid = True
+    if database and any(f for f in database):
+        clear_dir(databaseDir)
+        clear_dir(cacheDir)
+        isDatabaseValid = True
+        for databasefiles in database:
+            if(not allowed_file(databasefiles.filename)):
+                isDatabaseValid = False
+                break        
+        if(isDatabaseValid):
             for databasefiles in database:
-                if(not allowed_file(databasefiles.filename)):
-                    isDatabaseValid = False
-                    break        
-            if(isDatabaseValid):
-                for databasefiles in database:
-                    datFileName = secure_filename(databasefiles.filename)
-                    databasefiles.save(os.path.join(databaseDir,datFileName))
-                flash("Folder berhasil diunggah!")        
-                databaseLocal = os.listdir(databaseDir)
-                for databasefiles in databaseLocal:
-                    CBIR.save_cbir_results(os.path.join(databaseDir,databasefiles))
-            else:
-                flash('Folder yang Anda unggah mengandung file yang tidak valid. Silakan upload folder yang hanya mengandung file yang valid')
+                datFileName = secure_filename(databasefiles.filename)
+                databasefiles.save(os.path.join(databaseDir,datFileName))
+            flash("Folder berhasil diunggah!")        
+            databaseLocal = os.listdir(databaseDir)
+            for databasefiles in databaseLocal:
+                CBIR.save_cbir_results(os.path.join(databaseDir,databasefiles))
         else:
-            flash('Tidak ada file di dalam folder yang dipilih')
+            flash('Folder yang Anda unggah mengandung file yang tidak valid. Silakan upload folder yang hanya mengandung file yang valid')
+    else:
+        flash('Tidak ada file di dalam folder yang dipilih')
     return upload_image()
 def upload_image():
     #reset static database dan uploads
+    start = time.time()
     clear_dir(UPLOAD_FOLDER)
 
     if 'file' not in request.files:
@@ -89,7 +90,8 @@ def upload_image():
                     imgPrioQueue.append((cosSim,databaseDir+fileIterate))
             
         imgPrioQueue.sort(reverse=True)
-        return render_template('home.html', filename=filename, imgPrioQueue=imgPrioQueue)
+        end = time.time()
+        return render_template('home.html', filename=filename, imgPrioQueue=imgPrioQueue, prioQueueSize=len(imgPrioQueue),runTime = (end-start))
     else:
         flash('Ekstensi file yang diperbolehkan hanyalah .jpg, .png, dan .jpeg')
         return redirect(request.url)
