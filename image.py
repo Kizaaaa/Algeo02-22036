@@ -91,25 +91,6 @@ def image_to_normalized_glcm(image_path):
     symmetric_matrix = glcm_matrix + glcm_matrix.T
     symmetric_matrix_normalized = symmetric_matrix / np.sum(symmetric_matrix)
     return symmetric_matrix_normalized
-    # rows, cols = grayscale_matrix.shape
-    # for i in range(rows):
-    #     for j in range(cols):
-    #         if j + 1 < cols:
-    #             glcm_matrix[grayscale_matrix[i, j], grayscale_matrix[i, j + 1]] += 1
-    #             glcm_matrix[grayscale_matrix[i, j + 1], grayscale_matrix[i, j]] += 1
-    #         if i + 1 < rows:
-    #             glcm_matrix[grayscale_matrix[i, j], grayscale_matrix[i + 1, j]] += 1
-    #             glcm_matrix[grayscale_matrix[i + 1, j], grayscale_matrix[i, j]] += 1
-    #         if i - 1 >= 0 and j + 1 < cols:
-    #             glcm_matrix[grayscale_matrix[i, j], grayscale_matrix[i - 1, j + 1]] += 1
-    #             glcm_matrix[grayscale_matrix[i - 1, j + 1], grayscale_matrix[i, j]] += 1
-    #         if i + 1 < rows and j + 1 < cols:
-    #             glcm_matrix[grayscale_matrix[i, j], grayscale_matrix[i + 1, j + 1]] += 1
-    #             glcm_matrix[grayscale_matrix[i + 1, j + 1], grayscale_matrix[i, j]] += 1
-    # symmetric_matrix = glcm_matrix + glcm_matrix.T
-    # sumA = np.sum(symmetric_matrix)
-    # symmetric_matrix_normalized = symmetric_matrix / sumA
-    # return symmetric_matrix_normalized
 
 def contrast_homogeneity_entropy(symmetric_matrix_normalized):
     contrast = np.sum(symmetric_matrix_normalized * np.square(np.subtract.outer(range(256), range(256))))
@@ -129,32 +110,28 @@ def texture_cosine_similarity(symmetric_matrix_normalized1, symmetric_matrix_nor
 def save_cbir_results(image_path):
     hsv_matrix = image_to_hsv_matrix(image_path)
     text_file_path = os.path.splitext(image_path)[0] + '.txt'
-    np.savetxt(text_file_path, hsv_matrix, fmt='%d')
+    
     hsv_average_result = hsv_average(hsv_matrix)
-    with open(text_file_path, 'a') as file:
-        file.write('\n')
-        file.write('\n'.join(map(str, hsv_average_result)))
     glcm_matrix_normalized = image_to_normalized_glcm(image_path)
     contrast, homogeneity, entropy = contrast_homogeneity_entropy(glcm_matrix_normalized)
     glcm_result = (contrast, homogeneity, entropy)
-    with open(text_file_path, 'a') as file:
-        file.write('\n')
-        file.write('\n'.join(map(str, glcm_result)))
+
+    with open(text_file_path, 'w') as file:
+        file.write('\t'.join(map(str, hsv_average_result)) + '\n')
+        file.write('\t'.join(map(str, glcm_result)) + '\n')
 
 def get_cbir_results(image_path, cbir_type):
     text_file_path = os.path.splitext(image_path)[0] + '.txt'
     with open(text_file_path, 'r') as file:
-        content = file.read()
-    if cbir_type == 'color':
-        start = content.find("HSV Average") + len("HSV Average") + 1
-        end = content.find("GLCM Result")
-        result = content[start:end].strip()
-    elif cbir_type == 'texture':
-        start = content.find("GLCM Result") + len("GLCM Result") + 1
-        result = content[start:].strip()
-    return result    
+        lines = file.readlines()
+    if cbir_type == "color":
+        result_color = lines[0].strip().split('\t')
+        return result_color
+    else:
+        result_texture = lines[1].strip().split('\t')
+        return result_texture
 
-#symmetric_matrix_normalized1 = image_to_normalized_glcm('C:/Users/Hp/Documents/ALGEO 2/Algeo02-22036/test/0.jpg')
-#symmetric_matrix_normalized2 = image_to_normalized_glcm('C:/Users/Hp/Documents/ALGEO 2/Algeo02-22036/test/1.jpg')
-#cosine_similarity_value = texture_cosine_similarity(symmetric_matrix_normalized1, symmetric_matrix_normalized2)
-#print(cosine_similarity_value)
+# image_path = 'C:/Users/Hp/Documents/ALGEO 2/Algeo02-22036/test/0.jpg'
+# save_cbir_results(image_path)
+# result_texture = get_cbir_results(image_path, 'texture')
+# print("Texture Result:", result_texture)
