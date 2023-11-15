@@ -70,16 +70,16 @@ def upload_image():
         flash('Gambar berhasil diunggah!')
         imgPrioQueue = []
             #print(request.form.get('featuretoggle'))
-        #if(request.form.get('featuretoggle')):
-            #GLCM_Upload = CBIR.contrast_homogeneity_entropy(CBIR.image_to_normalized_glcm(UPLOAD_FOLDER+filename))
-            #for fileIterate in os.listdir(databaseDir):
-                #GLCM_avgDat = CBIR.get_cbir_results(os.path.join(databaseDir,fileIterate),'texture')
-                #print(GLCM_Upload)
-                #print(GLCM_avgDat)
-                #cosSim = CBIR.texture_cosine_similarity(GLCM_Upload,GLCM_avgDat) * 100
-                #print(cosSim)
-                #if(cosSim >60):
-                    #imgPrioQueue.append((cosSim,databaseDir+fileIterate))
+        if(request.form.get('featuretoggle')):
+            GLCM_Upload = CBIR.contrast_homogeneity_entropy(CBIR.image_to_normalized_glcm(UPLOAD_FOLDER+filename))
+            for fileIterate in os.listdir(databaseDir):
+                GLCM_avgDat = CBIR.get_cbir_results(os.path.join(databaseDir,fileIterate),'texture')
+                print(GLCM_Upload)
+                print(GLCM_avgDat)
+                cosSim = CBIR.texture_cosine_similarity(GLCM_Upload,GLCM_avgDat) * 100
+                print(cosSim)
+                if(cosSim >60):
+                    imgPrioQueue.append((cosSim,databaseDir+fileIterate))
             #else:
              #   hsv_avgUpload = CBIR.image_to_hsv_matrix(UPLOAD_FOLDER+filename)
               #  

@@ -98,11 +98,10 @@ def contrast_homogeneity_entropy(symmetric_matrix_normalized):
     entropy = -np.sum(symmetric_matrix_normalized * np.log2(symmetric_matrix_normalized + 1e-10))
     return contrast, homogeneity, entropy
 
-def texture_cosine_similarity(symmetric_matrix_normalized1, symmetric_matrix_normalized2):
-    contrast1, homogeneity1, entropy1 = contrast_homogeneity_entropy(symmetric_matrix_normalized1)
-    contrast2, homogeneity2, entropy2 = contrast_homogeneity_entropy(symmetric_matrix_normalized2)
-    vector1 = [contrast1, homogeneity1, entropy1]
-    vector2 = [contrast2, homogeneity2, entropy2]
+def texture_cosine_similarity(v1, v2):
+
+    vector1 = list(v1)
+    vector2 = list(v2)
     cosine_similarity_value = cosine_similarity(vector1, vector2)
     return cosine_similarity_value
 
@@ -126,14 +125,13 @@ def get_cbir_results(image_path, cbir_type):
         lines = file.readlines()
     if cbir_type == "color":
         result_color = lines[0].strip().split('\t')
-        return tuple(result_color)
+        return result_color
     else:
         result_texture = lines[1].strip().split('\t')
-        for i in result_texture:
-            i = float(i)
-        return tuple(result_texture)
 
-image_path = 'test/69.jpg'
-save_cbir_results(image_path)
-result_texture = get_cbir_results(image_path, 'color')
-print("Texture Result:", result_texture)
+        return float(result_texture[0]), float(result_texture[1]), float(result_texture[2])
+
+#image_path = 'test/69.jpg'
+#save_cbir_results(image_path)
+#result_texture = get_cbir_results(image_path, 'color')
+#print("Texture Result:", result_texture)
