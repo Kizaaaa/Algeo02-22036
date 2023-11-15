@@ -126,10 +126,12 @@ def get_cbir_results(image_path, cbir_type):
         lines = file.readlines()
     if cbir_type == "color":
         result_color = lines[0].strip().split('\t')
-        return result_color
+        return tuple(result_color)
     else:
         result_texture = lines[1].strip().split('\t')
-        return result_texture
+        for i in result_texture:
+            i = float(i)
+        return tuple(result_texture)
 
 image_path = 'test/69.jpg'
 save_cbir_results(image_path)
