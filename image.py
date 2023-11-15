@@ -41,7 +41,7 @@ def rgb_to_hsv(rgb_tuple):
     return int(h), int(s * 100), int(v * 100)
 
 def image_to_hsv_matrix(image_path):
-    image = Image.open(image_path)
+    image = Image.open(image_path).convert("RGB")
     resized_image = image.resize((256, 256))
     rgb_matrix = np.array(resized_image)
     hsv_matrix = np.array([[rgb_to_hsv(pixel) for pixel in row] for row in rgb_matrix])
@@ -99,13 +99,12 @@ def contrast_homogeneity_entropy(symmetric_matrix_normalized):
     return contrast, homogeneity, entropy
 
 def texture_cosine_similarity(v1, v2):
-
     vector1 = list(v1)
     vector2 = list(v2)
     cosine_similarity_value = cosine_similarity(vector1, vector2)
     return cosine_similarity_value
 
-# FIle Handling
+# File Handling
 def save_cbir_results(image_path):
     hsv_matrix = image_to_hsv_matrix(image_path)
     text_file_path = "static/cache/"+ os.path.splitext(os.path.basename(image_path))[0] + '.txt'
