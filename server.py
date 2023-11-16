@@ -1,4 +1,4 @@
-from flask import Flask, flash, request, redirect, url_for, render_template
+from flask import Flask, flash, request, redirect, url_for, render_template, send_file
 import urllib.request
 import os
 from werkzeug.utils import secure_filename
@@ -123,5 +123,9 @@ def upload_image():
 def display_image(filename):
     return redirect(url_for('static', filename='uploads/' + filename), code=301)
 
+@app.route('/download',methods=['GET'])
+def download_file():
+    p = "static/downloads/testimg.png"
+    return send_file(p,as_attachment=True)
 if __name__ == "__main__":
     app.run(debug=True)
