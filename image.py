@@ -41,7 +41,7 @@ def rgb_to_hsv(rgb_tuple):
     return int(h), int(s * 100), int(v * 100)
 
 def image_to_hsv_matrix(image_path):
-    image = Image.open(image_path)
+    image = Image.open(image_path).convert("RGB")
     resized_image = image.resize((256, 256))
     rgb_matrix = np.array(resized_image)
     hsv_matrix = np.array([[rgb_to_hsv(pixel) for pixel in row] for row in rgb_matrix])
@@ -91,25 +91,6 @@ def image_to_normalized_glcm(image_path):
     symmetric_matrix = glcm_matrix + glcm_matrix.T
     symmetric_matrix_normalized = symmetric_matrix / np.sum(symmetric_matrix)
     return symmetric_matrix_normalized
-    # rows, cols = grayscale_matrix.shape
-    # for i in range(rows):
-    #     for j in range(cols):
-    #         if j + 1 < cols:
-    #             glcm_matrix[grayscale_matrix[i, j], grayscale_matrix[i, j + 1]] += 1
-    #             glcm_matrix[grayscale_matrix[i, j + 1], grayscale_matrix[i, j]] += 1
-    #         if i + 1 < rows:
-    #             glcm_matrix[grayscale_matrix[i, j], grayscale_matrix[i + 1, j]] += 1
-    #             glcm_matrix[grayscale_matrix[i + 1, j], grayscale_matrix[i, j]] += 1
-    #         if i - 1 >= 0 and j + 1 < cols:
-    #             glcm_matrix[grayscale_matrix[i, j], grayscale_matrix[i - 1, j + 1]] += 1
-    #             glcm_matrix[grayscale_matrix[i - 1, j + 1], grayscale_matrix[i, j]] += 1
-    #         if i + 1 < rows and j + 1 < cols:
-    #             glcm_matrix[grayscale_matrix[i, j], grayscale_matrix[i + 1, j + 1]] += 1
-    #             glcm_matrix[grayscale_matrix[i + 1, j + 1], grayscale_matrix[i, j]] += 1
-    # symmetric_matrix = glcm_matrix + glcm_matrix.T
-    # sumA = np.sum(symmetric_matrix)
-    # symmetric_matrix_normalized = symmetric_matrix / sumA
-    # return symmetric_matrix_normalized
 
 def contrast_homogeneity_entropy(symmetric_matrix_normalized):
     contrast = np.sum(symmetric_matrix_normalized * np.square(np.subtract.outer(range(256), range(256))))
@@ -117,15 +98,45 @@ def contrast_homogeneity_entropy(symmetric_matrix_normalized):
     entropy = -np.sum(symmetric_matrix_normalized * np.log2(symmetric_matrix_normalized + 1e-10))
     return contrast, homogeneity, entropy
 
-def texture_cosine_similarity(symmetric_matrix_normalized1, symmetric_matrix_normalized2):
-    contrast1, homogeneity1, entropy1 = contrast_homogeneity_entropy(symmetric_matrix_normalized1)
-    contrast2, homogeneity2, entropy2 = contrast_homogeneity_entropy(symmetric_matrix_normalized2)
-    vector1 = [contrast1, homogeneity1, entropy1]
-    vector2 = [contrast2, homogeneity2, entropy2]
+def texture_cosine_similarity(v1, v2):
+    vector1 = list(v1)
+    vector2 = list(v2)
     cosine_similarity_value = cosine_similarity(vector1, vector2)
     return cosine_similarity_value
 
-#symmetric_matrix_normalized1 = image_to_normalized_glcm('C:/Users/Hp/Documents/ALGEO 2/Algeo02-22036/test/0.jpg')
-#symmetric_matrix_normalized2 = image_to_normalized_glcm('C:/Users/Hp/Documents/ALGEO 2/Algeo02-22036/test/1.jpg')
-#cosine_similarity_value = texture_cosine_similarity(symmetric_matrix_normalized1, symmetric_matrix_normalized2)
-#print(cosine_similarity_value)
+# File Handling
+def save_cbir_results(image_path):
+    hsv_matrix = image_to_hsv_matrix(image_path)
+    text_file_path = "static/cache/"+ os.path.splitext(os.path.basename(image_path))[0] + '.txt'
+
+    hsv_average_result = hsv_average(hsv_matrix)
+    glcm_matrix_normalized = image_to_normalized_glcm(image_path)
+    contrast, homogeneity, entropy = contrast_homogeneity_entropy(glcm_matrix_normalized)
+    glcm_result = (contrast, homogeneity, entropy)
+
+    with open(text_file_path, 'w') as file:
+        file.write('\t'.join(map(str, hsv_average_result)) + '\n')
+        file.write('\t'.join(map(str, glcm_result)) + '\n')
+
+def get_cbir_results(image_path, cbir_type):
+    text_file_path = "static/cache/"+ os.path.splitext(os.path.basename(image_path))[0] + '.txt'
+    with open(text_file_path, 'r') as file:
+        lines = file.readlines()
+    if cbir_type == "color":
+        result_color = lines[0].strip().split('\t')
+        result_color_out = [eval(i) for a,i in enumerate(result_color)]
+
+        return result_color_out
+    else:
+        result_texture = lines[1].strip().split('\t')
+
+        return float(result_texture[0]), float(result_texture[1]), float(result_texture[2])
+
+#image_path = 'test/69.jpg'
+#test = hsv_average(image_to_hsv_matrix(image_path))
+#print(test)
+#res_color = get_cbir_results(image_path,'color')
+#print(res_color)
+#save_cbir_results(image_path)
+#result_texture = get_cbir_results(image_path, 'color')
+#print("Texture Result:", result_texture)
