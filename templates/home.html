@@ -7,25 +7,20 @@
         <link rel="stylesheet" href = "{{url_for('static',filename='css/style.css')}}">
     </head>
     <body>
-        <script>
-            function readURL(input) {
-                if (input.files && input.files[0]) {
-                    var reader = new FileReader();
-                    reader.onload = function(e) {
-                        $('#imagePreview').css('background-image', 'url('+e.target.result +')');
-                        $('#imagePreview').hide();
-                        $('#imagePreview').fadeIn(650);
-                    }
-                    reader.readAsDataURL(input.files[0]);
-                }
-            }
-            $("#imageUpload").change(function() {
-                readURL(this);
-            });</script>    
-        <h1>Never Gonna Lens You Up</h1> 
-        <h2>Aplikasi pencarian gambar</h2>
+        <header>
+            <nav>
+                <ul>
+                    <li><a class="active" href="#home">Home</a></li>
+                    <li><a href="#news">Tutorial</a></li>
+                    <li><a href="#contact">Video</a></li>
+                    <li><a href="#about">About Us</a></li>
+                  </ul>
+            </nav>
+        </header>   
+        <h1 id="judul">Never Gonna Lens You Up</h1> 
+        <!-- <h2>Aplikasi pencarian gambar</h2>
         <p>Unggah gambar dengan menggunakan tombol di bawah ini. File yang valid hanyalah file yang berformat .png, .jpg, dan .jpeg.</p>
-        <p>Pastikan folder yang Anda unggah hanya memiliki file yang valid</p>
+        <p>Pastikan folder yang Anda unggah hanya memiliki file yang valid</p> -->
         <p>
             {% with messages = get_flashed_messages() %}
               {% if messages %}
@@ -37,38 +32,64 @@
               {% endif %}
             {% endwith %}
         </p>
-        <form method="POST" enctype="multipart/form-data"> 
-            <h3>Unggah Gambar:</h3>
-            <input type="file" name="file"><br> <!-- tombol upload Gambar -->
-            <h3>Unggah folder dataset:</h3>
-            <input type="file" name="database" id="databaseinput" webkitdirectory = "true" multiple/><br>
-            <h3>Pilih metode pencarian</h3>        
-            <div class="switchclass">
-            <h3>Warna</h3>
-                <label class="switch">
-                    <input type="checkbox" name="featuretoggle">
-                    <span class="slider round"></span>
-                </label>
-            <h3>Tekstur</h3>
-        </div>
-            <h3>Kirim Gambar dan Dataset:</h3>
-            <input type="submit"> <!-- tombol submit-->
-        </form><br>
-        
+        <div class="upload">
+            <div class="uploadleft">
+                <div id = "frame">
 
-        <h2>Gambar yang diinput:</h2>
-        {% if filename %}
-            <div>
-                <img src="{{ url_for('display_image', filename=filename) }}", width="300px">
+                </div>
             </div>
-        {% endif %}
-        <h2>Hasil pencarian:</h2>
-        <p>Menampilkan {{prioQueueSize}} gambar dalam waktu {{runTime}} detik</p>
-        {% for simData in imgPrioQueue %}
-            <figure style="float: left; margin-right: 20px; margin-bottom: 20px;">
-                <img src="{{ simData[1] }}" height="200px">
-                <figcaption>{{ simData[0] }}%</figcaption>
-            </figure>
-        {% endfor %}
+            <div class="uploadright">
+                <form method="POST" enctype="multipart/form-data"> 
+                    <h3 class="unggah">Unggah Gambar:</h3>
+                    <input type="file" name="file" id="imageInput" hidden> <!-- tombol upload Gambar -->
+                    <label class="uploadlabel" for="imageInput">Unggah Gambar</label>
+                    <h3 class="unggah">Unggah folder dataset:</h3>
+                    <input type="file" name="database" id="databaseinput" webkitdirectory = "true" multiple/><br>
+                    <h3 class="unggah">Metode pencarian:</h3>        
+                    <div class="switchclass">
+                    <h4>Warna</h4>
+                        <label class="switch">
+                            <input type="checkbox" name="featuretoggle">
+                            <span class="slider round"></span>
+                        </label>
+                    <h4>Tekstur</h4>
+                    </div>
+                    <input type="submit"> <!-- tombol submit-->
+                </form>
+            </div>
+        </div>
+        <hr>
+        
+        <div class="result">
+            <h2>Gambar yang diinput:</h2>
+            {% if filename %}
+                <div>
+                    <img src="{{ url_for('display_image', filename=filename) }}", width="300px">
+                </div>
+            {% endif %}
+            <h2>Hasil pencarian:</h2>
+            {% for simData in imgPrioQueue %}
+                <figure style="float: left; margin-right: 20px; margin-bottom: 20px;">
+                    <img src="{{ simData[1] }}" height="200px">
+                    <figcaption>{{ simData[0] }}%</figcaption>
+                </figure>
+            {% endfor %}
+        </div>
+
+        <script>
+            document.getElementById('imageInput').addEventListener('change', function (e) {
+                var file = e.target.files[0];
+                
+                if (file) {
+                    var reader = new FileReader();
+    
+                    reader.onload = function (e) {
+                        document.getElementById('frame').style.backgroundImage = 'url(' + e.target.result + ')';
+                    };
+    
+                    reader.readAsDataURL(file);
+                }
+            });
+        </script>
     </body>
 </html>
