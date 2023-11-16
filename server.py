@@ -41,14 +41,14 @@ def upload_dataset():
             for databasefiles in database:
                 datFileName = secure_filename(databasefiles.filename)
                 databasefiles.save(os.path.join(databaseDir,datFileName))
-            flash("Folder berhasil diunggah!")        
+            flash("Folder berhasil diunggah!\n")        
             databaseLocal = os.listdir(databaseDir)
             for databasefiles in databaseLocal:
                 CBIR.save_cbir_results(os.path.join(databaseDir,databasefiles))
         else:
-            flash('Folder yang Anda unggah mengandung file yang tidak valid. Silakan upload folder yang hanya mengandung file yang valid')
+            flash('Folder yang Anda unggah mengandung file yang tidak valid. Silakan upload folder yang hanya mengandung file yang valid\n')
     else:
-        flash('Tidak ada file di dalam folder yang dipilih')
+        flash('Tidak ada file di dalam folder yang dipilih\n')
     return upload_image()
 def upload_image():
     #reset static database dan uploads
@@ -56,19 +56,19 @@ def upload_image():
     clear_dir(UPLOAD_FOLDER)
 
     if 'file' not in request.files:
-        flash('No file part')
+        flash('No file part\n')
         return redirect(request.url)
     file = request.files['file']
 
 
     if file.filename == '':
-        flash('Tidak ada gambar yang dipilih')
+        flash('Tidak ada gambar yang dipilih\n')
         return redirect(request.url)
 
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        flash('Gambar berhasil diunggah!')
+        flash('Gambar berhasil diunggah!\n')
         imgPrioQueue = []
             #print(request.form.get('featuretoggle'))
         if(request.form.get('featuretoggle')):
@@ -93,7 +93,7 @@ def upload_image():
         end = time.time()
         return render_template('home.html', filename=filename, imgPrioQueue=imgPrioQueue, prioQueueSize=len(imgPrioQueue),runTime = (end-start))
     else:
-        flash('Ekstensi file yang diperbolehkan hanyalah .jpg, .png, dan .jpeg')
+        flash('Ekstensi file yang diperbolehkan hanyalah .jpg, .png, dan .jpeg\n')
         return redirect(request.url)
  
 @app.route('/display/<filename>')

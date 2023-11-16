@@ -77,7 +77,7 @@ def rgb_to_grayscale(r, g, b):
     return y
 
 def image_to_normalized_glcm(image_path):
-    image = Image.open(image_path)
+    image = Image.open(image_path).convert("RGB")
     resized_image = image.resize((256, 256))
     rgb_matrix = np.array(resized_image)
     grayscale_matrix = np.apply_along_axis(lambda pixel: int(round(rgb_to_grayscale(*pixel))), axis=-1, arr=rgb_matrix)
