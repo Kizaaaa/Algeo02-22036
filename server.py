@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 import image as CBIR
 import shutil
 import time
+from flask_paginate import get_page_args,Pagination
 app = Flask(__name__)
 
 UPLOAD_FOLDER = 'static/uploads/'
@@ -12,7 +13,10 @@ databaseDir = "static/imgdataset/"
 app.secret_key = "secret key"
 cacheDir = "static/cache/"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
- 
+#list temporary untuk pagination
+imgPrioQueue = []
+inputRuntime = []
+uploadedImage = []
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'bmp'])
  
 def allowed_file(filename):
@@ -21,9 +25,24 @@ def allowed_file(filename):
 def clear_dir(directory):
     for dumpFiles in os.listdir(directory):
         os.remove(os.path.join(directory,dumpFiles))
+def get_img(offset=0,per_page=8):
+    return imgPrioQueue[offset: offset+per_page]
 @app.route('/')
 def home():
-    return render_template('home.html')
+    page, per_page, offset = get_page_args(page_parameter='page',per_page_parameter='per_page')
+    total = len(imgPrioQueue)
+    pagination_img = get_img(offset=offset,per_page=per_page)
+    pagination = Pagination(page=page,per_page=per_page,total=total,css_framework='bootstrap4')
+
+    if(len(uploadedImage) == 0):
+        filename = ''
+    else:
+        filename=uploadedImage[0]
+    if(len(inputRuntime) == 0):
+        runTime = 0
+    else:
+        runTime = inputRuntime[0]
+    return render_template('home.html', filename=filename, imgPrioQueue=pagination_img, page=page, per_page=per_page, pagination=pagination,prioQueueSize = total, runTime=runTime)
  
 @app.route('/', methods=['POST'])
 def upload_dataset():
@@ -54,7 +73,9 @@ def upload_image():
     #reset static database dan uploads
     start = time.time()
     clear_dir(UPLOAD_FOLDER)
-
+    imgPrioQueue.clear()
+    inputRuntime.clear()
+    uploadedImage.clear()
     if 'file' not in request.files:
         flash('No file part\n')
         return redirect(request.url)
@@ -69,7 +90,7 @@ def upload_image():
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         flash('Gambar berhasil diunggah!\n')
-        imgPrioQueue = []
+        uploadedImage.append(filename)
             #print(request.form.get('featuretoggle'))
         if(request.form.get('featuretoggle')):
             GLCM_Upload = CBIR.contrast_homogeneity_entropy(CBIR.image_to_normalized_glcm(UPLOAD_FOLDER+filename))
@@ -91,7 +112,9 @@ def upload_image():
             
         imgPrioQueue.sort(reverse=True)
         end = time.time()
-        return render_template('home.html', filename=filename, imgPrioQueue=imgPrioQueue, prioQueueSize=len(imgPrioQueue),runTime = (end-start))
+        inputRuntime.append(end-start)
+        return home()
+        #render_template('home.html', filename=filename, imgPrioQueue=imgPrioQueue,prioQueueSize = len(imgPrioQueue), runTime=(end-start))
     else:
         flash('Ekstensi file yang diperbolehkan hanyalah .jpg, .png, .jpeg, atau .bmp\n')
         return redirect(request.url)
