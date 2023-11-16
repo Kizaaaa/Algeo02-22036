@@ -13,7 +13,7 @@ app.secret_key = "secret key"
 cacheDir = "static/cache/"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
  
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'bmp'])
  
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -46,9 +46,9 @@ def upload_dataset():
             for databasefiles in databaseLocal:
                 CBIR.save_cbir_results(os.path.join(databaseDir,databasefiles))
         else:
-            flash('Folder yang Anda unggah mengandung file yang tidak valid. Silakan upload folder yang hanya mengandung file yang valid\n')
+            flash('Folder yang Anda unggah mengandung file yang tidak valid. Silakan upload folder yang hanya mengandung file yang valid, yaitu .png, .jpg, .jpeg, atau .bmp.\n')
     else:
-        flash('Tidak ada file di dalam folder yang dipilih\n')
+        flash('Tidak ada file di dalam folder dataset yang dipilih\n')
     return upload_image()
 def upload_image():
     #reset static database dan uploads
@@ -62,7 +62,7 @@ def upload_image():
 
 
     if file.filename == '':
-        flash('Tidak ada gambar yang dipilih\n')
+        flash('Tidak ada gambar query yang diunggah\n')
         return redirect(request.url)
 
     if file and allowed_file(file.filename):
@@ -93,7 +93,7 @@ def upload_image():
         end = time.time()
         return render_template('home.html', filename=filename, imgPrioQueue=imgPrioQueue, prioQueueSize=len(imgPrioQueue),runTime = (end-start))
     else:
-        flash('Ekstensi file yang diperbolehkan hanyalah .jpg, .png, dan .jpeg\n')
+        flash('Ekstensi file yang diperbolehkan hanyalah .jpg, .png, .jpeg, atau .bmp\n')
         return redirect(request.url)
  
 @app.route('/display/<filename>')
