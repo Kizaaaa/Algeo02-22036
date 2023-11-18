@@ -10,7 +10,7 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
-ul {
+nav ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -18,11 +18,11 @@ ul {
     background-color: #916969;
 }
   
-li {
+nav li {
     float: left;
 }
 
-li a {
+nav li a {
     display: block;
     color: #470505;
     text-align: center;
@@ -30,7 +30,7 @@ li a {
     text-decoration: none;
 }
   
-li a:hover {
+nav li a:hover {
     background-color: #DACDCD;
 }
 
@@ -55,6 +55,11 @@ li a:hover {
 .uploadleft {
     flex: 1;
     flex-grow: 2;
+    min-height: 300px;
+}
+
+.uploadleft img {
+    height: 300px;
 }
 
 #frame {
@@ -62,8 +67,9 @@ li a:hover {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    min-height: 300px;
+    height: 300px;
 }
+
 
 .uploadright {
     flex: 1;
@@ -150,6 +156,7 @@ input[type=button], input[type=submit] {
     text-decoration: none;
     margin: 4px 2px;
     cursor: pointer;
+    font-size: medium;
 }
 
 .uploadlabel {
@@ -160,6 +167,27 @@ input[type=button], input[type=submit] {
     font-family: sans-serif;
     border-radius: 0.3rem;
     cursor: pointer;
+}
+
+.submitndownload {
+    display: flex;
+    align-items: center;
+}
+
+.download {
+    margin-left: 10px;
+}
+
+.download a {
+    background-image: linear-gradient(to right, #0768DA 0%, #8136D4 100%);
+    border: none;
+    border-radius: 30px;
+    color: white;
+    padding: 16px 32px;
+    text-decoration: none;
+    margin: 4px 2px;
+    cursor: pointer;
+    font-size: medium;
 }
   
 /* Rounded sliders */
@@ -178,5 +206,14 @@ hr {
 
 .result {
     margin: 0 10%;
-    
+}
+
+.result-text {
+    display: flex;
+    justify-content: space-between;
+}
+
+.error-message ul  {
+    color: red;
+    background-color: whitesmoke;
 }
