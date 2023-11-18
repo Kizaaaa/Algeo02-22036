@@ -6,10 +6,12 @@ import image as CBIR
 import shutil
 import time
 from flask_paginate import get_page_args,Pagination
+from fpdf import FPDF
 app = Flask(__name__)
 
 UPLOAD_FOLDER = 'static/uploads/'
 databaseDir = "static/imgdataset/"
+downloadDir = "static/downloads/"
 app.secret_key = "secret key"
 cacheDir = "static/cache/"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -17,6 +19,8 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 imgPrioQueue = []
 inputRuntime = []
 uploadedImage = []
+chosenParameter =[]
+tempIMGPQ = []
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'bmp'])
  
 def allowed_file(filename):
@@ -76,6 +80,7 @@ def upload_image():
     imgPrioQueue.clear()
     inputRuntime.clear()
     uploadedImage.clear()
+    chosenParameter.clear()
     if 'file' not in request.files:
         flash('No file part\n')
         return redirect(request.url)
@@ -93,6 +98,7 @@ def upload_image():
         uploadedImage.append(filename)
             #print(request.form.get('featuretoggle'))
         if(request.form.get('featuretoggle')):
+            chosenParameter.append("Tekstur")
             GLCM_Upload = CBIR.contrast_homogeneity_entropy(CBIR.image_to_normalized_glcm(UPLOAD_FOLDER+filename))
             for fileIterate in os.listdir(databaseDir):
                 GLCM_avgDat = CBIR.get_cbir_results(os.path.join(databaseDir,fileIterate),'texture')
@@ -103,6 +109,7 @@ def upload_image():
                 if(cosSim >60):
                     imgPrioQueue.append((cosSim,databaseDir+fileIterate))
         else:
+            chosenParameter.append("Warna")
             hsv_avgUpload = CBIR.hsv_average(CBIR.image_to_hsv_matrix(UPLOAD_FOLDER+filename))
             for fileIterate in os.listdir(databaseDir):
                 hsv_avgDat = CBIR.get_cbir_results(os.path.join(databaseDir,fileIterate),'color')
@@ -125,7 +132,39 @@ def display_image(filename):
 
 @app.route('/download',methods=['GET'])
 def download_file():
-    p = "static/downloads/testimg.png"
+    tempIMGPQ = imgPrioQueue
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font('arial','B',20)
+    pdf.cell(h=20,w=190,border=0,txt="Never Gonna Lens You Up",align="C",ln=1)
+    pdf.set_font('arial',size=16)
+    pdf.cell(h=20,w=190,border=0,txt="Website pencarian gambar dengan metode CBIR warna dan tekstur",ln=1,align="C")
+    pdf.cell(h=20,w=190,border=0,txt="Parameter yang dipilih: "+chosenParameter[0],ln=1,align="L")
+    pdf.cell(h=150,w=190,border=1,txt="Gambar Query: ",ln=1,align="L")
+    pdf.image(UPLOAD_FOLDER+uploadedImage[0],w=100,x=80,y=80)
+    pdf.cell(h=20,w=190,border=0,txt="Banyak Gambar yang ditemukan: "+str(len(tempIMGPQ)),ln=1,align="L")
+    pdf.cell(h=20,w=190,border=0,txt="Waktu eksekusi: "+str(inputRuntime[0])+" detik",ln=1,align="L")
+    i = 0
+    pdf.set_font('arial','B',18)
+    pdf.cell(h=20,w=190,border=0,txt="Tabel Data Kemiripan Gambar Dataset dengan Gambar Query",ln=1,align="C")
+    
+    for images in tempIMGPQ:
+        if(i%5 == 0):
+            if(i!=0):
+                pdf.add_page()
+            pdf.set_font('arial','B',16)
+            pdf.cell(h=10,w=10,border=1,txt="No.",ln=0,align="C")
+            pdf.cell(h=10,w=100,border=1,txt="Gambar",ln=0,align="C")
+            pdf.cell(h=10,w=80,border=1,txt="Kemiripan dengan query (%)",ln=1,align="C")
+        pdf.set_font('arial',size=16)
+        pdf.cell(h=10,w=10,border=1,txt=str(i+1),ln=0,align="C")
+        pdf.cell(h=10,w=100,border=0,ln=0,align="C",link=pdf.image(images[1],w = 40))
+        pdf.cell(h=10,w=80,border=1,txt=str(images[0]),ln=1,align="C")
+        
+        i+=1
+
+    p = downloadDir+"Test.pdf"
+    pdf.output(p,'F')
     return send_file(p,as_attachment=True)
 if __name__ == "__main__":
     app.run(debug=True)
