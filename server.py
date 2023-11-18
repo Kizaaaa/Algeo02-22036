@@ -46,7 +46,7 @@ def home():
         runTime = 0
     else:
         runTime = inputRuntime[0]
-    return render_template('home.html', filename=filename, imgPrioQueue=pagination_img, page=page, per_page=per_page, pagination=pagination,prioQueueSize = total, runTime=runTime)
+    return render_template('index.html', filename=filename, imgPrioQueue=pagination_img, page=page, per_page=per_page, pagination=pagination,prioQueueSize = total, runTime=runTime)
  
 @app.route('/', methods=['POST'])
 def upload_dataset():
