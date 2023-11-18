@@ -50,6 +50,7 @@ def home():
  
 @app.route('/', methods=['POST'])
 def upload_dataset():
+    start = time.time()
     database = request.files.getlist("database")    
     databaseLoc = os.listdir(databaseDir)
     if database and any(f for f in database):
@@ -70,8 +71,11 @@ def upload_dataset():
                 CBIR.save_cbir_results(os.path.join(databaseDir,databasefiles))
         else:
             flash('Folder yang Anda unggah mengandung file yang tidak valid. Silakan upload folder yang hanya mengandung file yang valid, yaitu .png, .jpg, .jpeg, atau .bmp.\n')
+        end = time.time()
+        flash('Waktu pengunggahan dataset yang berisi ' + str(len(databaseLocal)) + ' gambar adalah '+str(end-start)+' detik')
     else:
         flash('Tidak ada file di dalam folder dataset yang dipilih\n')
+
     return upload_image()
 def upload_image():
     #reset static database dan uploads
@@ -163,7 +167,7 @@ def download_file():
         
         i+=1
 
-    p = downloadDir+"Test.pdf"
+    p = downloadDir+"ImageRetrievalResult.pdf"
     pdf.output(p,'F')
     return send_file(p,as_attachment=True)
 if __name__ == "__main__":
