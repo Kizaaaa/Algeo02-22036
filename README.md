@@ -50,14 +50,14 @@ List the ready features here:
 
 
 ## Cara Setup
-1. Clone repository ini ke local repository.
+1. Clone repository ini ke local repository atau extract file .zip pada release.
 2. Jika source code index.html, style.css, server.py, dan image.py masih berada di dalam folder src, keluarkan semuanya dari folder src dan pindahkan setiap file di atas dengan petunjuk berikut.
 
     a. index.html dipindahkan ke folder templates/.
    
     b. style.css dipindahkan ke folder static/css/ (folder css terletak di dalam folder static)
    
-    c. server.py dan images.py dipindahkan ke parent dari folder src (atau di folder root dari local repository ini).
+    c. server.py dan images.py dikeluarkan dari folder src dan dipindahkan ke parent dari folder src (atau di folder root dari local repository ini, pastikan server.py dan images.py setara dengan folder src).
 3. Buka terminal/powershell di folder root local repository ini dan ketik python server.py lalu tekan enter.
 ![Example screenshot](./static/Image/tutor7.png)
 4. Terminal/powershell akan memberikan Anda sebuah link untuk menuju website. Ctrl + klik link tersebut untuk membuka website.
