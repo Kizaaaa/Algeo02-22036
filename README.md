@@ -84,6 +84,7 @@ Room for improvement:
 ## Acknowledgements
 Give credit here.
 - Proyek ini terinspirasi dari beberapa tutorial, beberapa di antaranya sebagai berikut.
+
     [[CVPR20 Tutorial] Live-coding Demo to Implement an Image Search Engine from Scratch](https://www.youtube.com/watch?v=M0Y9_vBmYXU&t=261s&pp=ygUbcmV2ZXJzZSBpbWFnZSBzZWFyY2ggcHl0aG9u)
   
     [WebCBIR](https://github.com/ledleledle/WebCBIR)
