@@ -7,7 +7,7 @@
 * [Fitur](#fitur)
 * [Screenshot](#screenshot)
 * [Cara Setup](#cara-setup)
-* [Cara menggunakan website](#cara-enggunakan-website)
+* [Cara menggunakan website](#cara-menggunakan-website)
 * [Status Proyek](#status-proyek)
 * [Ruang Perbaikan](#ruang-perbaikan)
 * [Pengetahuan](#pengetahuan)
