@@ -76,7 +76,6 @@ Project is: _complete_.
 
 
 ## Room for Improvement
-Room for improvement:
 - Perbesar batas untuk mengunggah dataset.
 - Perbagus tampilan website.
 - Tambahkan opsi input gambar query dari kamera.
@@ -85,7 +84,6 @@ Room for improvement:
 
 
 ## Acknowledgements
-Give credit here.
 - Proyek ini terinspirasi dari beberapa tutorial, beberapa di antaranya sebagai berikut.
 
     [Content Based Image Retrieval Using Gray Scale Weighted Average Method](https://www.researchgate.net/figure/Image-retrieval-using-color-average-weighted-method_fig7_307707028)
