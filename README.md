@@ -2,16 +2,17 @@
 > Sebuah website sistem temu balik gambar (reverse image search) yang menggunakan Content Based Image Retrieval (CBIR) dengan parameter warna dan parameter tekstur.
 
 ## Daftar Isi
-* [General Info](#general-information)
-* [Technologies Used](#technologies-used)
-* [Features](#features)
-* [Screenshots](#screenshots)
-* [Setup](#setup)
-* [Usage](#usage)
-* [Project Status](#project-status)
-* [Room for Improvement](#room-for-improvement)
-* [Acknowledgements](#acknowledgements)
-* [Contact](#contact)
+* [Informasi Umum](#informasi-umum)
+* [Teknologi yang dipakai](#teknologi-yang-dipakai)
+* [Fitur](#fitur)
+* [Screenshot](#screenshot)
+* [Cara Setup](#cara-setup)
+* [Cara menggunakan website](#cara-enggunakan-website)
+* [Status Proyek](#status-proyek)
+* [Ruang Perbaikan](#ruang-perbaikan)
+* [Pengetahuan](#pengetahuan)
+* [Pengujian Website](#pengujian-website)
+* [Kontak](#kontak)
 <!-- * [License](#license) -->
 
 
@@ -57,9 +58,9 @@ List the ready features here:
     b. style.css dipindahkan ke folder static/css/ (folder css terletak di dalam folder static)
    
     c. server.py dan images.py dipindahkan ke parent dari folder src (atau di folder root dari local repository ini).
-4. Buka terminal/powershell di folder root local repository ini dan ketik python server.py lalu tekan enter.
+3. Buka terminal/powershell di folder root local repository ini dan ketik python server.py lalu tekan enter.
 ![Example screenshot](./static/Image/tutor7.png)
-5. Terminal/powershell akan memberikan Anda sebuah link untuk menuju website. Ctrl + klik link tersebut untuk membuka website.
+4. Terminal/powershell akan memberikan Anda sebuah link untuk menuju website. Ctrl + klik link tersebut untuk membuka website.
 ![Example screenshot](./static/Image/tutor8.png)
 
 ## Cara menggunakan website
@@ -77,7 +78,7 @@ List the ready features here:
 
 
 ## Status Proyek
-Project is: _complete_.
+Proyek ini sudah: _selesai_.
 
 
 ## Ruang Perbaikan
