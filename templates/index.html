@@ -5,16 +5,17 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href = "{{url_for('static',filename='css/style.css')}}">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     </head>
     <body>
         <header>
             <nav>
                 <ul>
-                    <li><a class="active" href="#home">Home</a></li>
-                    <li><a href="#news">Tutorial</a></li>
-                    <li><a href="#contact">Video</a></li>
-                    <li><a href="#about">About Us</a></li>
-                    <li><a href="#concept">Concept</a></li>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="{{url_for('static',filename='page/tutorial.html')}}">Tutorial</a></li>
+                    <li><a href="{{url_for('static',filename='page/video.html')}}">Video</a></li>
+                    <li><a href="{{url_for('static',filename='page/about-us.html')}}">About Us</a></li>
+                    <li><a href="{{url_for('static',filename='page/concept.html')}}">Concept</a></li>
                   </ul>
             </nav>
         </header>   
@@ -70,6 +71,7 @@
                       <li>{{ message }}</li><br>
                     {% endfor %}
                     </ul>
+                    <hr style="width: 100%; margin: 0;">
                   {% endif %}
                 {% endwith %}
             </p>
@@ -79,13 +81,15 @@
                 <p>Menampilkan {{prioQueueSize}} gambar dalam waktu {{runTime}} detik</p>
             </div>
             {% endif %}
-            {{pagination.links}}
-            {% for simData in imgPrioQueue %}
-                <figure style="float: left; margin-right: 20px; margin-bottom: 20px;">
-                    <img src="{{ simData[1] }}" height="200px">
-                    <figcaption>{{ simData[0] }}%</figcaption>
-                </figure>
-            {% endfor %}
+            <div class="paginate">
+                {{pagination.links}}
+                {% for simData in imgPrioQueue %}
+                    <figure style="float: left; margin-right: 20px; margin-bottom: 20px;">
+                        <img src="{{ simData[1] }}" height="200px">
+                        <figcaption>{{ simData[0] }}%</figcaption>
+                    </figure>
+                {% endfor %}
+            </div>
         </div>
 
         <script>
