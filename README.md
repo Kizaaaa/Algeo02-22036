@@ -92,7 +92,7 @@ Give credit here.
 
     [[CVPR20 Tutorial] Live-coding Demo to Implement an Image Search Engine from Scratch](https://www.youtube.com/watch?v=M0Y9_vBmYXU&t=261s&pp=ygUbcmV2ZXJzZSBpbWFnZSBzZWFyY2ggcHl0aG9u)
 
-    [Feature Extraction : Gray Level Co-occurrence Matrix (GLCM)]([https://github.com/ledleledle/WebCBIR](https://yunusmuhammad007.medium.com/feature-extraction-gray-level-co-occurrence-matrix-glcm-10c45b6d46a1)
+    [Feature Extraction : Gray Level Co-occurrence Matrix (GLCM)](https://yunusmuhammad007.medium.com/feature-extraction-gray-level-co-occurrence-matrix-glcm-10c45b6d46a1)
   
     [WebCBIR](https://github.com/ledleledle/WebCBIR)
 - Terimakasih yang sebesar-besarnya kepada semua anggota kelompok atas kerja samanya, juga kepada para asisten, teman-teman, dan pihak-pihak lainnya yang sudah membantu dalam pengerjaan Tugas Besar ini dan tidak dapat kami sebutkan satu per satu.
