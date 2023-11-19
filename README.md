@@ -100,12 +100,37 @@ Project is: _complete_.
     [WebCBIR](https://github.com/ledleledle/WebCBIR)
 - Terimakasih yang sebesar-besarnya kepada semua anggota kelompok atas kerja samanya, juga kepada para asisten, teman-teman, dan pihak-pihak lainnya yang sudah membantu dalam pengerjaan Tugas Besar ini dan tidak dapat kami sebutkan satu per satu.
 
-
+## Pengujian Website
+![Example screenshot](./img/buwung_1.png)
+![Example screenshot](./img/random_1.png)
+![Example screenshot](./img/random_2.png)
+![Example screenshot](./img/random_3.png)
+![Example screenshot](./img/random_4.png)
+![Example screenshot](./img/random_5.png)
+![Example screenshot](./img/random_6.png)
+![Example screenshot](./img/random_7.png)
+![Example screenshot](./img/random_8.png)
+![Example screenshot](./img/texture_1.png)
+![Example screenshot](./img/texture_2.png)
+![Example screenshot](./img/texture_3.png)
+![Example screenshot](./img/texture_4.png)
+![Example screenshot](./img/texture_5.png)
+![Example screenshot](./img/texture_6.png)
+![Example screenshot](./img/texture_7.png)
+![Example screenshot](./img/texture_8.png)
+![Example screenshot](./img/warna_1.png)
+![Example screenshot](./img/warna_2.png)
+![Example screenshot](./img/warna_3.png)
+![Example screenshot](./img/warna_4.png)
+![Example screenshot](./img/warna_5.png)
+![Example screenshot](./img/warna_6.png)
+![Example screenshot](./img/warna_7.png)
+![Example screenshot](./img/warna_8.png)
 ## Kontak
 Dibuat oleh:
-1. [Akbar Al Fattah](https://github.com/DeltDev)
-2. [Dzaky Satrio Nugroho](https://github.com/Kizaaaa)
-3. [Christopher Brian](https://github.com/ChristopherBrian)
+1. [Akbar Al Fattah](https://github.com/DeltDev) - 13522036
+2. [Dzaky Satrio Nugroho](https://github.com/Kizaaaa) - 13522059
+3. [Christopher Brian](https://github.com/ChristopherBrian) - 13522106
 
 Feel free to contact us!
 
