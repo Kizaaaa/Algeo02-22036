@@ -17,8 +17,8 @@
 
 ## General Information
 - Website ini dibuat dengan Python (Flask, Numpy, PIL), HTML5, dan CSS.
-- Website ini dibuat sebagai sistem temu balik gambar, yaitu mencari gambar dari dataset yang mempunyai kemiripan tertinggi dengan gambar query
-- Website ini dibuat untuk memenuhi Tugas Besar 2 Aljabar Linear dan Geometri 2023/2024
+- Website ini dibuat sebagai sistem temu balik gambar, yaitu mencari gambar dari dataset yang mempunyai kemiripan tertinggi dengan gambar query.
+- Website ini dibuat untuk memenuhi Tugas Besar 2 Aljabar Linear dan Geometri 2023/2024.
 - Tugas Besar ini diberikan untuk menguji pemahaman terhadap penerapan Aljabar Linear dan Geometri di Informatika, terutama Aljabar Vektor.
 <!-- You don't have to answer all the questions - just the ones relevant to your project. -->
 
