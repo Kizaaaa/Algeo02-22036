@@ -85,6 +85,7 @@ Room for improvement:
 Give credit here.
 - Proyek ini terinspirasi dari beberapa tutorial, beberapa di antaranya sebagai berikut.
     [[CVPR20 Tutorial] Live-coding Demo to Implement an Image Search Engine from Scratch](https://www.youtube.com/watch?v=M0Y9_vBmYXU&t=261s&pp=ygUbcmV2ZXJzZSBpbWFnZSBzZWFyY2ggcHl0aG9u)
+  
     [WebCBIR](https://github.com/ledleledle/WebCBIR)
 - Terimakasih yang sebesar-besarnya kepada semua anggota kelompok atas kerja samanya, juga kepada para asisten, teman-teman, dan pihak-pihak lainnya yang sudah membantu dalam pengerjaan Tugas Besar ini dan tidak dapat kami sebutkan satu per satu.
 
@@ -94,6 +95,7 @@ Dibuat oleh:
 1. [Akbar Al Fattah](https://github.com/DeltDev)
 2. [Dzaky Satrio Nugroho](https://github.com/Kizaaaa)
 3. [Christopher Brian](https://github.com/ChristopherBrian)
+
 Feel free to contact us!
 
 
